@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>笨笨汤圆</title>
+<style>
+/* ===== Font Stack（Google Fonts + 系统回退）===== */
+@import url('https://cdn.jsdelivr.net/npm/smiley-sans-font@1.0.0/SmileySans.css');
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@300;400;500&family=Quicksand:wght@400;600&family=Mochiy+Pop+One&display=swap');
+
+/* ===== Design System: 星空棉花糖 ===== */
+:root {
+  --ground: #FFFCF7;
+  --lavender: #C9B8E8;
+  --lavender-light: #E8DFF5;
+  --mint: #B8E8D8;
+  --mint-light: #DFF5EE;
+  --peach: #F5D5C8;
+  --peach-light: #FCF0EB;
+  --ink: #3D3028;
+  --ink-soft: #7A6D65;
+  --glow-purple: rgba(201,184,232,0.2);
+  --glow-mint: rgba(184,232,216,0.2);
+  --glow-peach: rgba(245,213,200,0.2);
+  --glass-bg: rgba(255,255,255,0.55);
+  --glass-border: rgba(255,255,255,0.35);
+  --radius-sm: 20px;
+  --radius-md: 28px;
+  --radius-lg: 48px;
+  --font-display: 'ZCOOL KuaiLe', 'Ma Shan Zheng', 'Noto Sans SC', cursive;
+  --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-en: 'Quicksand', 'SF Pro Display', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ground);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ===== 珍珠光泽背景 ===== */
+.bg-shimmer {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, var(--glow-purple) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 35%, var(--glow-mint) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 40% at 50% 70%, var(--glow-peach) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 90% 80%, var(--glow-purple) 0%, transparent 60%);
+}
+
+/* ===== 软云朵 ===== */
+.cloud {
+  position: fixed; z-index: 0; pointer-events: none;
+  border-radius: 50%; opacity: 0.35; filter: blur(40px);
+}
+.cloud-1 { width:200px; height:120px; background:var(--lavender-light); top:8%; left:-10%; animation:cloudDrift 20s ease-in-out infinite; }
+.cloud-2 { width:160px; height:100px; background:var(--mint-light); top:25%; right:-8%; animation:cloudDrift 24s ease-in-out infinite reverse; }
+.cloud-3 { width:180px; height:90px; background:var(--peach-light); top:55%; left:-5%; animation:cloudDrift 28s ease-in-out infinite 5s; }
+.cloud-4 { width:140px; height:110px; background:var(--lavender-light); top:75%; right:-10%; animation:cloudDrift 22s ease-in-out infinite 3s reverse; }
+@keyframes cloudDrift {
+  0%,100% { transform: translate(0,0); }
+  33% { transform: translate(20px,-15px); }
+  66% { transform: translate(-10px,10px); }
+}
+
+/* ===== 星座粒子 ===== */
+.constellation {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+}
+.dot {
+  position: absolute; width: 3px; height: 3px;
+  border-radius: 50%; background: var(--lavender); opacity: 0;
+  animation: dotPulse 3s ease-in-out infinite;
+}
+.dot:nth-child(1){top:12%;left:15%;animation-delay:0s}
+.dot:nth-child(2){top:18%;left:35%;animation-delay:.6s;background:var(--mint)}
+.dot:nth-child(3){top:22%;left:70%;animation-delay:1.2s}
+.dot:nth-child(4){top:32%;left:25%;animation-delay:1.8s;background:var(--peach)}
+.dot:nth-child(5){top:42%;left:80%;animation-delay:2.4s}
+.dot:nth-child(6){top:55%;left:40%;animation-delay:.3s;background:var(--mint)}
+.dot:nth-child(7){top:62%;left:10%;animation-delay:1.5s}
+.dot:nth-child(8){top:68%;left:65%;animation-delay:2.1s;background:var(--peach)}
+.dot:nth-child(9){top:78%;left:30%;animation-delay:.9s}
+.dot:nth-child(10){top:85%;left:55%;animation-delay:2.7s;background:var(--mint)}
+.dot:nth-child(11){top:90%;left:75%;animation-delay:3.3s}
+.dot:nth-child(12){top:95%;left:20%;animation-delay:3.9s;background:var(--peach)}
+@keyframes dotPulse {
+  0%,100% { opacity:0; transform:scale(1); }
+  50% { opacity:0.7; transform:scale(2.5); }
+}
+
+/* ===== 主容器 ===== */
+.site {
+  position: relative; z-index: 1;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 20px;
+  padding-top: env(safe-area-inset-top, 20px);
+  padding-bottom: env(safe-area-inset-bottom, 80px);
+}
+
+/* ===== 区块通用 ===== */
+.section {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 0;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+}
+.section.enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section.exit {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: opacity 0.35s ease-in, transform 0.35s ease-in;
+}
+/* 封面首次加载特殊处理 */
+.section.cover { opacity: 1; transform: none; }
+
+/* ===== 封面 ===== */
+.cover {
+  min-height: 100vh;
+  min-height: 100dvh;
+  text-align: center;
+  padding-top: max(18vh, env(safe-area-inset-top, 0px));
+}
+.cover-constellation {
+  display: flex; justify-content: center; gap: 28px; margin-bottom: 32px;
+  animation: coverFloat 4s ease-in-out infinite;
+}
+@keyframes coverFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.cover-star {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--lavender); box-shadow: 0 0 20px var(--glow-purple);
+}
+.cover-star:nth-child(2){background:var(--mint);box-shadow:0 0 20px var(--glow-mint);margin-top:16px}
+.cover-star:nth-child(3){background:var(--peach);box-shadow:0 0 20px var(--glow-peach)}
+.cover-star:nth-child(4){background:var(--lavender);box-shadow:0 0 20px var(--glow-purple);margin-top:16px}
+.cover h1 {
+  font-family: "Mochiy Pop One", "Smiley Sans", "ZCOOL KuaiLe", cursive;
+  font-size: clamp(34px, 10vw, 48px);
+  letter-spacing: 3px; margin-bottom: 12px;
+  background: linear-gradient(135deg, #C9B8E8 0%, #B5C9E0 40%, #B8E8D8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(201,184,232,0.25));
+}
+.cover .sub {
+  font-size: clamp(14px, 4vw, 18px);
+  color: var(--ink-soft); margin-bottom: 40px;
+}
+.cover .arrow {
+  font-size: 24px; color: var(--lavender);
+  animation: bounce 2s ease infinite;
+}
+@keyframes bounce {
+  0%,20%,50%,80%,100% { transform:translateY(0); }
+  40% { transform:translateY(-20px); }
+  60% { transform:translateY(-10px); }
+}
+
+/* ===== 玻璃卡片 ===== */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  margin-bottom: 20px;
+}
+/* Fallback for browsers without backdrop-filter */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .glass-card { background: rgba(255,255,255,0.85); }
+}
+.glass-card.purple { border-color: rgba(201,184,232,0.4); background:rgba(232,223,245,0.25); }
+.glass-card.mint   { border-color: rgba(184,232,216,0.4); background:rgba(223,245,238,0.25); }
+.glass-card.peach  { border-color: rgba(245,213,200,0.4); background:rgba(252,240,235,0.25); }
+
+/* ===== 区域标题 ===== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 6vw, 28px);
+  text-align: center; margin-bottom: 28px;
+}
+.section-title .accent { color:var(--lavender); }
+
+/* ===== 波浪分割线 ===== */
+.wave-divider {
+  display: flex; justify-content: center; align-items: center;
+  padding: 16px 0; gap: 6px;
+}
+.wave-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lavender); opacity: 0.4;
+  animation: waveBounce 1.8s ease-in-out infinite;
+}
+.wave-dot:nth-child(2){animation-delay:.15s;background:var(--mint)}
+.wave-dot:nth-child(3){animation-delay:.30s;background:var(--peach)}
+.wave-dot:nth-child(4){animation-delay:.45s;background:var(--lavender)}
+.wave-dot:nth-child(5){animation-delay:.60s;background:var(--mint)}
+.wave-dot:nth-child(6){animation-delay:.75s;background:var(--peach)}
+.wave-dot:nth-child(7){animation-delay:.90s;background:var(--lavender)}
+@keyframes waveBounce {
+  0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-10px); opacity: 0.8; }
+}
+
+/* ===== 时间轴 ===== */
+.timeline { position:relative; padding: 20px 0; }
+.timeline::before {
+  content: '';
+  position: absolute; left: 15px; top: 20px; bottom: 20px; width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--lavender) 0px, var(--lavender) 4px,
+    transparent 4px, transparent 12px
+  );
+  opacity: 0.5;
+}
+.timeline-item {
+  position: relative; padding-left: 42px; margin-bottom: 28px;
+  opacity: 0; transform: translateY(24px);
+  transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.timeline-item.visible { opacity:1; transform:translateY(0); }
+.timeline-dot {
+  position: absolute; left: 9px; top: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--lavender); box-shadow: 0 0 12px var(--glow-purple);
+}
+.timeline-dot.mint { background:var(--mint); box-shadow:0 0 12px var(--glow-mint); }
+.timeline-dot.peach { background:var(--peach); box-shadow:0 0 12px var(--glow-peach); }
+.timeline-date {
+  font-family: var(--font-en); font-size: 12px; font-weight:600;
+  color: var(--lavender); letter-spacing:1px; margin-bottom:2px;
+}
+.timeline-title { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+.timeline-quote {
+  font-size: 14px; color: var(--ink-soft);
+  padding: 10px 14px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+}
+
+/* ===== 对话气泡 + 注释 ===== */
+.chat-bubble {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px 20px 20px 6px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.chat-bubble.purple { background:rgba(232,223,245,0.3); border-color:rgba(201,184,232,0.3); }
+.chat-bubble.mint   { background:rgba(223,245,238,0.3); border-color:rgba(184,232,216,0.3); }
+.chat-bubble.peach  { background:rgba(252,240,235,0.3); border-color:rgba(245,213,200,0.3); }
+.chat-bubble .chat-header {
+  font-size: 12px; font-weight: 500; margin-bottom: 6px; opacity: 0.7;
+}
+.chat-bubble .chat-text { font-size: 15px; line-height: 1.7; }
+.chat-bubble .chat-note {
+  font-size: 12px; color: var(--ink-soft); opacity: 0.55;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  font-style: italic;
+}
+
+/* ===== 照片网格 ===== */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.photo-card {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--glass-bg);
+  aspect-ratio: 1;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-card:active { transform: scale(0.96); }
+.photo-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.photo-card .ph {
+  display: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+/* ===== 游戏UI火花 ===== */
+.spark-counter {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+.spark-hp-bar {
+  flex: 1; height: 22px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 11px; overflow: hidden;
+}
+.spark-hp-fill {
+  height: 100%; width: 75%;
+  border-radius: 11px;
+  background: linear-gradient(90deg, var(--lavender), var(--mint), var(--peach));
+  animation: hpGlow 2s ease-in-out infinite;
+}
+@keyframes hpGlow {
+  0%,100% { opacity:0.8; }
+  50% { opacity:1; }
+}
+.spark-badge {
+  font-family: var(--font-en); font-size: 13px; font-weight:600;
+  background: linear-gradient(135deg, var(--lavender), var(--mint));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== 游戏回忆区 ===== */
+.game-memory {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.game-chip {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+}
+.game-chip .game-icon { font-size: 32px; }
+.game-chip .game-info { flex: 1; }
+.game-chip .game-name { font-size: 16px; font-weight: 500; }
+.game-chip .game-detail { font-size: 13px; color: var(--ink-soft); }
+
+/* ===== 音乐按钮 ===== */
+.music-fab {
+  position: fixed; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: 20px; z-index: 100;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lavender-light), var(--mint-light));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 20px;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--glow-purple);
+  transition: all 0.3s ease;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.music-fab:active { transform: scale(0.9); }
+.music-fab.on { box-shadow: 0 4px 28px rgba(184,232,216,0.4); }
+.music-fab .note-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.music-fab.on .note-icon {
+  animation: noteWave 2.5s ease-in-out infinite;
+}
+@keyframes noteWave {
+  0%,100% { transform: translateY(0); }
+  30% { transform: translateY(-2px); }
+  60% { transform: translateY(1px); }
+  85% { transform: translateY(-1.5px); }
+}
+
+/* ===== 灯箱 ===== */
+.lightbox {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  justify-content: center; align-items: center;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 80vh; border-radius:12px; }
+.lightbox-close {
+  position: absolute; top: calc(20px + env(safe-area-inset-top,0px)); right: 20px;
+  color: white; font-size: 32px; cursor: pointer; z-index: 201;
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== 响应式：PC 端 ===== */
+@media screen and (min-width: 700px) {
+  .site {
+    max-width: 560px;
+    padding: 0 32px;
+  }
+  .photo-grid { grid-template-columns: repeat(3, 1fr); }
+  .cover h1 { font-size: 52px; }
+  .section { min-height: 40vh; }
+  .glass-card { padding: 40px 36px; }
+  .chat-bubble .chat-text { font-size: 16px; }
+}
+
+/* ===== 响应式：小屏手机 ===== */
+@media screen and (max-width: 360px) {
+  .site { padding: 0 14px; }
+  .glass-card { padding: 24px 16px; }
+  .chat-bubble { padding: 14px 16px; }
+  .chat-bubble .chat-text { font-size: 14px; }
+  .photo-grid { gap: 8px; }
+  .spark-counter { padding: 16px; gap: 10px; }
+  .timeline-item { padding-left: 36px; }
+}
+
+/* ===== reduced-motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 珍珠光泽背景 -->
+<div class="bg-shimmer"></div>
+
+<!-- 软云朵 -->
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+<div class="cloud cloud-4"></div>
+
+<!-- 星座粒子 -->
+<div class="constellation">
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+</div>
+
+<!-- ===== 主容器 ===== -->
+<div class="site">
+
+  <!-- 1. 封面 -->
+  <section class="section cover">
+    <div class="cover-constellation">
+      <div class="cover-star"></div>
+      <div class="cover-star"></div>
+      <div class="cover-star"></div>
+      <div class="cover-star"></div>
+    </div>
+    <h1>笨笨汤圆</h1>
+    <p class="sub">致 笨笨汤圆<br>我们的故事，从一条消息开始</p>
+    <p class="arrow">✦</p>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 2. 序言 -->
+  <section class="section">
+    <div class="glass-card purple">
+      <p style="font-family:var(--font-display);font-size:22px;margin-bottom:16px;">展信佳 ✦</p>
+      <p style="color:var(--ink-soft);margin-bottom:10px;">其实想给你写这封信已经很久了。</p>
+      <p style="color:var(--ink-soft);margin-bottom:10px;">第一次见到你的时候，你说<i>"大哥哥我是汤圆"</i>。当时以为和小汤圆只能是普通的网友，很快就会在列表里吃灰，结果没想到，现在已经小半年了，我们中间的聊天就没有断过，dy也有一百多天的火花了。</p>
+      <p style="color:var(--ink-soft);">这五个月里，你从叫"雾夜明大哥哥"变成了叫我<b>"乐乐"</b>。我也从叫你"汤圆"变成了叫你——<b>笨笨</b>。</p>
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 3. 时间轴 -->
+  <section class="section">
+    <h2 class="section-title">✦ <span class="accent">从初见到见面</span></h2>
+    <div class="timeline" id="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2026 · 02 · 26</div>
+        <div class="timeline-title">初识</div>
+        <div class="timeline-quote">"大哥哥我是汤圆"</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot mint"></div>
+        <div class="timeline-date">2026 · 03 · 04</div>
+        <div class="timeline-title">🔥 火花开始</div>
+        <div class="timeline-quote">"抖音要续火花，你也别忘了！"</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot peach"></div>
+        <div class="timeline-date">2026 · 05 · 12</div>
+        <div class="timeline-title">💎 Best Friend</div>
+        <div class="timeline-quote">"ok现在我们才是best friend吧"</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2026 · 06 · 17</div>
+        <div class="timeline-title">礼物讨论</div>
+        <div class="timeline-quote">"超过一百的礼物我不收🤪" → "等你发财我要你给我买100万的东西"</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot mint"></div>
+        <div class="timeline-date">2026 · 06 · 25</div>
+        <div class="timeline-title">✉️ 项链 + 信</div>
+        <div class="timeline-quote">"汤圆还想要个项链不？" → "我给你写一封超长的信"</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot peach"></div>
+        <div class="timeline-date">2026 · 07 · 11</div>
+        <div class="timeline-title">🚗 出发去长沙</div>
+        <div class="timeline-quote">"晚上八点走" — 距离见面越来越近</div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">暑假 · 待发生</div>
+        <div class="timeline-title">💫 第一次见面</div>
+        <div class="timeline-quote">等我们写完这一页的故事...</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 4. 忘不掉的话 -->
+  <section class="section">
+    <h2 class="section-title">✦ <span class="accent">忘不掉的话</span></h2>
+
+    <div class="chat-bubble peach">
+      <div class="chat-header" style="color:var(--peach);">🐱 笨笨汤圆 · 05-10</div>
+      <div class="chat-text">"我们也来约定一下吧🧐这次要记得续期"</div>
+      <div class="chat-note">三年不绝交，高中毕业还要续约</div>
+    </div>
+
+    <div class="chat-bubble peach">
+      <div class="chat-header" style="color:var(--peach);">🐱 笨笨汤圆 · 05-12</div>
+      <div class="chat-text">"ok现在我们才是best friend吧"</div>
+      <div class="chat-note">那天起，你就是最重要的朋友了</div>
+    </div>
+
+    <div class="chat-bubble mint">
+      <div class="chat-header" style="color:var(--mint);">🐱 笨笨汤圆 · 06-07</div>
+      <div class="chat-text">"嗯。那个。就是对不起 今天下午确实是我自己的问题 心情不太好所以生气 也是我要求太高了 像要求我闺蜜一样要求你 。也是我心情不好所以我一直在讲气话 对不起。"</div>
+      <div class="chat-note">第一次吵架后主动跑来道歉的汤圆</div>
+    </div>
+
+    <div class="chat-bubble purple">
+      <div class="chat-header" style="color:var(--lavender);">🐱 笨笨汤圆 · 06-17</div>
+      <div class="chat-text">"超过一百的礼物我不收🤪"<br>"等你发财了我要你给我买100万的东西"</div>
+      <div class="chat-note">明明自己还是学生，却舍不得让我多花钱</div>
+    </div>
+
+    <div class="chat-bubble peach">
+      <div class="chat-header" style="color:var(--peach);">🐱 笨笨汤圆 · 06-25</div>
+      <div class="chat-text">"没关系 我给你写一封超长的信"</div>
+      <div class="chat-note">明明是我该给你写才对啊，小笨蛋</div>
+    </div>
+
+    <div class="chat-bubble purple">
+      <div class="chat-header" style="color:var(--lavender);">🐱 笨笨汤圆 · 07-10</div>
+      <div class="chat-text">"只要长时间收不到你的消息就会焦虑的症"</div>
+      <div class="chat-note">原来你也在等着我的消息</div>
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 5. 照片墙 -->
+  <section class="section">
+    <h2 class="section-title">✦ <span class="accent">我们的照片</span></h2>
+
+    <!-- 学校里的汤圆 -->
+    <p style="font-family:var(--font-display); font-size: 18px; color: var(--lavender); margin-bottom: 12px; margin-top: 8px;">🏫 学校里的汤圆</p>
+    <div class="photo-grid">
+      <div class="photo-card" onclick="openLightbox(0)">
+        <img src="photos/760E7F9329BBF5A62057C9C4CE3750EA.jpg" alt="学校里的汤圆" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+      <div class="photo-card" onclick="openLightbox(1)">
+        <img src="photos/134B9EBB5FBFCDC6F00F66BBD9B9EAB0.jpg" alt="学校里的汤圆" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+    </div>
+
+    <p style="text-align:center; font-size:12px; color:var(--ink-soft); margin-top:6px; font-style:italic;">素颜小汤圆依旧美美的</p>
+
+    <!-- 日常可爱的汤圆 -->
+    <p style="font-family:var(--font-display); font-size: 18px; color: var(--mint); margin-bottom: 12px; margin-top: 20px;">🌸 日常里可爱的汤圆</p>
+    <div class="photo-grid">
+      <div class="photo-card" onclick="openLightbox(2)">
+        <img src="photos/CF18F019C302DD249A4DBADCD11B0A00.jpg" alt="日常可爱的汤圆" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+      <div class="photo-card" onclick="openLightbox(3)">
+        <img src="photos/27C3BF39803113E1EB99ED58692F2472.jpg" alt="日常可爱的汤圆" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+    </div>
+
+    <p style="text-align:center; font-size:12px; color:var(--ink-soft); margin-top:6px; font-style:italic;">汤圆再可爱下去世界就要毁灭了吧？</p>
+
+    <!-- Cosplay -->
+    <p style="font-family:var(--font-display); font-size: 18px; color: var(--peach); margin-bottom: 12px; margin-top: 20px;">🎭 汤圆的第一次 Cos</p>
+    <div class="photo-grid" style="grid-template-columns: 1fr; max-width: 280px; margin: 0 auto;">
+      <div class="photo-card" onclick="openLightbox(4)">
+        <img src="photos/75D838BE9784377375BB2DCC1B4E5DFD.jpg" alt="第一次Cos" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+    </div>
+    <p style="text-align:center; font-size:12px; color:var(--ink-soft); margin-top:6px; font-style:italic;">第一次 Cos 是自己一个人，第二次就要和我一起啦 ✨</p>
+
+    <!-- 沙雕卖萌 -->
+    <p style="font-family:var(--font-display); font-size: 18px; color: var(--lavender); margin-bottom: 12px; margin-top: 20px;">😝 在我面前沙雕卖萌的汤圆</p>
+    <div class="photo-grid" style="grid-template-columns: 1fr; max-width: 280px; margin: 0 auto;">
+      <div class="photo-card" onclick="openLightbox(5)">
+        <img src="photos/4E647F4E1957BB51650A041810D0A680.jpg" alt="沙雕卖萌的汤圆" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="ph">📷</span>
+      </div>
+    </div>
+    <p style="text-align:center; font-size:12px; color:var(--ink-soft); margin-top:6px; font-style:italic;">只有在我面前才会这样放飞自我的小笨蛋</p>
+
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 6. 火花记录 -->
+  <section class="section">
+    <h2 class="section-title">✦ <span class="accent">我们的火花</span></h2>
+    <div class="spark-counter">
+      <span style="font-size:36px;">🔥</span>
+      <div style="flex:1;">
+        <div style="font-family:var(--font-en);font-size:13px;color:var(--ink-soft);margin-bottom:4px;">DAILY SPARK STREAK</div>
+        <div class="spark-hp-bar"><div class="spark-hp-fill"></div></div>
+      </div>
+      <div class="spark-badge">100+ DAYS</div>
+    </div>
+    <div class="glass-card mint">
+      <p style="text-align:center;font-size:15px;color:var(--ink-soft);">
+        "我只和汤圆一个人续火花哦"<br>
+        <span style="font-size:13px;margin-top:8px;display:inline-block;">—— 从3月4日开始，从未断过 🔥</span>
+      </p>
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 7. 游戏回忆 -->
+  <section class="section">
+    <h2 class="section-title">✦ <span class="accent">一起打游戏的日子</span></h2>
+    <div class="game-memory">
+      <div class="game-chip">
+        <div class="game-icon">🔫</div>
+        <div class="game-info">
+          <div class="game-name">三角洲行动</div>
+          <div class="game-detail">"来打粥怎么说" — 第一次一起玩到现在的固定节目</div>
+        </div>
+      </div>
+      <div class="game-chip">
+        <div class="game-icon">👑</div>
+        <div class="game-info">
+          <div class="game-name">王者荣耀</div>
+          <div class="game-detail">从五排到双排，从钻石到王者并肩作战</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 8. 信（完整版） -->
+  <section class="section" id="letterSection">
+    <div class="glass-card purple" style="line-height:2;">
+      <p style="font-family:var(--font-display);font-size:22px;margin-bottom:20px;">小汤圆：</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">展信佳。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">其实想给你写这封信已经很久了，但当真的拿起笔的时候，又不知道从哪说起。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">第一次见到你的时候，你说"大哥哥我是汤圆"。当时以为和小汤圆只能是普通的网友，很快就会在列表里吃灰，结果没想到，现在已经小半年了，我们中间的聊天就没有断过，dy也有一百多天的火花了。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">这五个月里，你从叫"雾夜明大哥哥"变成了叫我"乐乐"、叫我"臭乐乐"、叫我"猪猪"。我也从叫你"汤圆"变成了叫你"笨笨"、叫你"小笨笨"、叫你"小笨蛋"——嗯，虽然你总说自己很聪明啦。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">你总说自己拍照丑、说自己找不到优点——但每次你发照片过来，我都在想：这个笨蛋明明很好看啊，怎么老觉得自己不好看。你p图的技术越来越好了，发给我的照片我都存着呢。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">还有你发给我的语音，半夜唱的那首奇怪的歌，我到现在还留着。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">还记得当时不小心被你把礼物猜出来的时候，你说"超过一百的礼物我不收"的时候吗？我当时想，这小汤圆怎么这么懂事的，搞得我都不知道送你什么好了。我想了很久才决定送你这个<b>手表</b>——没什么花里胡哨的，就是很实用。等你上高中了，上课的时候抬手就能看到时间。我希望每次你看时间的时候，都能想起有个人在惦记着你。这就是我送手表的意义。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">还有那条<b>项链</b>。我知道你之前和那个朋友的事情——那条项链你还一直戴着，即使闹掰了也没摘下来过。我问你为什么还戴着的时候，你说你是为了怀念，但我知道，那是因为你在乎那段回忆吧。我希望汤圆能每天都开心，所以我想着，以后就由我来陪着小汤圆吧。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">你不知道吧，每次你说"来打粥"的时候，我在游戏里都想多照顾你一点。给你多分点装备，帮你挡挡枪，看到你被人打了我比你还急。不过可能很多时候太急了导致语气不太好，抱歉啦小汤圆。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">所以我想着，要不就做点什么东西，把你我的点点滴滴都装进去。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">你发给我的每一张照片、每一条语音、每一句"乐乐"、每一次续火花的提醒——我都记得。那些因为你晚睡而担心的夜晚，那些因为和你打游戏快乐的夜晚，还有知道你要来长沙之后激动得翻来覆去的夜晚——我都记得。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">你说你"很容易被感动，很玻璃心，有人说你你会很难过，自己躲起来消化"——放心吧，有我在，我不会让别人说你的。谁要是让你难过了，你跟我说，我去找他。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">你总说你很凶——好吧，你确实很凶："你这个臭大学生不准给我买贵的礼物不然我就哈气"，"我不要和你玩了"。但你也很可爱，会在晚上说"本公主要去洗澡澡了"，会说"晚安安喵"，会在生气之后主动跑来道歉说"对不起，是我自己的问题"。这样的汤圆真的很可爱。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">虽然汤圆还只是一个准高中生，但你比我认识的很多人都要懂事、要成熟。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">还有，虽然我整天叫你笨笨汤圆——但其实你一点都不笨哦。会做蛋挞，会拍照，懂穿搭，p图也是全程自己研究出来的，已经完胜百分之九十的人了好不好。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">我知道这次中考没能如愿去一中，去了四中可能会有点失落吧。但其实仔细想想——谁说不一定是因祸得福呢？我高考不就没考好嘛，结果到了怀化学院，然后阴差阳错在网上认识了你。如果没有那次考砸，我可能根本不会遇到那个叫我"大哥哥"的小汤圆。所以你别太沮丧哦，说不定你在四中也能收获非常不得了的东西呢——比一中还厉害的那种。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">马上就要在长沙见面了。说真的，我有点紧张——见面的时候你会不会嫌弃我啊？我比你想象中要笨一点，比聊天里要不会说话一点，但那颗想对你好好的心，是真的。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">这个网站，就当是我给你的回信吧。你说你写了一封超长的信给我，那我也做一个东西给你——只不过用的是代码，不是纸和笔。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">希望你喜欢。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">对了，以后想打粥了随时喊我。<br>想续火花了也随时喊我。<br>不开心了更要喊我。<br>我永远会陪着你的，<br>我不准我的笨笨汤圆出事哦。</p>
+      <p style="color:var(--ink-soft);margin-bottom:14px;">还记得我们最开始的约定吗？<br>我们三年之内绝对不会绝交，<br>我会静静的等着汤圆，<br>在三年高中之后和我继续续约。</p>
+      <p style="text-align:right;color:var(--ink-soft);margin-top:32px;">—— 你的乐乐<br>2026年7月</p>
+    </div>
+  </section>
+
+  <div class="wave-divider">
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div><div class="wave-dot"></div><div class="wave-dot"></div>
+    <div class="wave-dot"></div>
+  </div>
+
+  <!-- 9. 结尾 -->
+  <section class="section" style="min-height:35vh;text-align:center;">
+    <p style="font-family:var(--font-display);font-size:clamp(18px,5vw,22px);margin-bottom:20px;">我不准我的笨笨汤圆出事哦</p>
+    <p style="color:var(--ink-soft);font-size:15px;margin-bottom:12px;">
+      以后想打粥了随时喊我<br>
+      想续火花了也随时喊我<br>
+      不开心了更要喊我
+    </p>
+    <p style="color:var(--ink-soft);font-size:14px;margin-bottom:20px;">
+      还记得我们最开始的约定吗？<br>
+      我们三年之内绝对不会绝交<br>
+      我会静静的等着汤圆，<br>在三年高中之后和我继续续约
+    </p>
+    <p style="font-family:var(--font-display);font-size:clamp(22px,6vw,28px);margin-top:16px;">🌙 永远陪着你的，乐乐</p>
+    <p style="color:var(--ink-soft);font-size:12px;opacity:0.5;margin-top:48px;text-align:center;">愿我们的友谊长存</p>
+  </section>
+
+</div><!-- .site -->
+
+<!-- 背景音乐 -->
+<audio id="bgmAudio" loop preload="auto" src="photos/shunkan-symphony.mp3" style="display:none;"></audio>
+
+<!-- 音乐按钮 -->
+<button class="music-fab" id="musicBtn" aria-label="音乐"><span class="note-icon">🎵</span></button>
+
+<!-- 照片灯箱 -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox();event.stopPropagation();">✕</span>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+(function() {
+  'use strict';
+  // ===== 滚动动画 =====
+  (function() {
+    var all = document.querySelectorAll('.section');
+    var cover = document.querySelector('.section.cover');
+    if (cover) cover.classList.add('enter');
+
+    function check() {
+      var st = window.pageYOffset || document.documentElement.scrollTop;
+      var wh = window.innerHeight;
+
+      all.forEach(function(sec, i) {
+        if (sec.classList.contains('cover')) return;
+        var r = sec.getBoundingClientRect();
+        var top = r.top + st;
+        var mid = top + r.height * 0.3;
+
+        // 信用顶部，其他用中点
+        var inZone = (sec.id === 'letterSection')
+          ? (r.top < wh * 1.1)
+          : (mid < st + wh * 1.15 && top + r.height > st);
+
+        if (inZone) {
+          // 入场
+          if (!sec.classList.contains('enter') || sec.classList.contains('exit')) {
+            sec.classList.remove('exit');
+            setTimeout(function(){ sec.classList.add('enter'); }, i * 60);
+          }
+        } else if (sec.classList.contains('enter')) {
+          // 不在触发区 → 出场
+          sec.classList.remove('enter');
+          sec.classList.add('exit');
+        }
+      });
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function(){ check(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    setTimeout(function(){ all.forEach(function(s){ s.classList.add('enter'); }); }, 5000);
+  })();
+
+  // ===== 时间轴额外动画（保留原有逻辑）=====
+  try {
+    var timelineObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.timeline-item').forEach(function(el) { timelineObs.observe(el); });
+  } catch(e) {
+    document.querySelectorAll('.timeline-item').forEach(function(el) { el.classList.add('visible'); });
+  }
+
+  // ===== 音乐控制 =====
+  var bgm = document.getElementById('bgmAudio');
+  if (bgm) bgm.volume = 0.10;
+
+  var playing = false;
+  var btn = document.getElementById('musicBtn');
+  var noteIcon = btn ? btn.querySelector('.note-icon') : null;
+  var fadeInterval = null;
+
+  function fadeIn() {
+    if (!bgm) return;
+    clearInterval(fadeInterval);
+    bgm.volume = 0;
+    bgm.play().then(function() {
+      var vol = 0;
+      fadeInterval = setInterval(function() {
+        vol += 0.01;
+        if (vol >= 0.10) { vol = 0.10; clearInterval(fadeInterval); }
+        bgm.volume = vol;
+      }, 30);
+    }).catch(function(e) {
+      console.log('需要用户手势:', e.message);
+      playing = false;
+      if (noteIcon) noteIcon.textContent = '🎵';
+      if (btn) btn.classList.remove('on');
+    });
+  }
+
+  function fadeOut(callback) {
+    if (!bgm) return;
+    clearInterval(fadeInterval);
+    var vol = bgm.volume;
+    fadeInterval = setInterval(function() {
+      vol -= 0.01;
+      if (vol <= 0) { vol = 0; clearInterval(fadeInterval); bgm.pause(); if (callback) callback(); }
+      bgm.volume = Math.max(0, vol);
+    }, 30);
+  }
+
+  // 按钮点击
+  if (btn) {
+    btn.addEventListener('click', function() {
+      if (playing) {
+        fadeOut(function() {
+          playing = false;
+          if (noteIcon) noteIcon.textContent = '🎵';
+          btn.classList.remove('on');
+        });
+      } else {
+        playing = true;
+        if (noteIcon) noteIcon.textContent = '🎶';
+        btn.classList.add('on');
+        fadeIn();
+      }
+    });
+  }
+
+  // ===== 照片灯箱 =====
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var photoList = [
+    'photos/760E7F9329BBF5A62057C9C4CE3750EA.jpg',
+    'photos/134B9EBB5FBFCDC6F00F66BBD9B9EAB0.jpg',
+    'photos/CF18F019C302DD249A4DBADCD11B0A00.jpg',
+    'photos/27C3BF39803113E1EB99ED58692F2472.jpg',
+    'photos/75D838BE9784377375BB2DCC1B4E5DFD.jpg',
+    'photos/4E647F4E1957BB51650A041810D0A680.jpg'
+  ];
+
+  window.openLightbox = function(idx) {
+    if (!lightbox || !lightboxImg) return;
+    if (idx < 0 || idx >= photoList.length) return;
+    lightboxImg.src = photoList[idx];
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeLightbox = function() {
+    if (!lightbox) return;
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  // ESC 关闭灯箱
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && lightbox && lightbox.classList.contains('open')) {
+      closeLightbox();
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
